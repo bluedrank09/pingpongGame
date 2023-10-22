@@ -1,0 +1,55 @@
+#include <Servo.h>
+
+// SERVO MOTORS
+Servo Servo_bot; //user servo
+
+// ULTRASONCIC DISTANCE SENSORS
+int triggerPinLeft = 6; // setting up trigger pin on ultrasonic distance sensor to pin 7 on Arduino
+int echoPinLeft = 7;
+int triggerPinRight = 8; // setting up trigger pin on ultrasonic distance sensor to pin 7 on Arduino
+int echoPinRight = 9; // setting up echo pin on ultrasonic disance sensor to pin 8 on Arduino
+int cmLeft = 0;
+int cmRight = 0;
+
+void setup(){
+  //servos
+  Servo_bot.attach(3);
+
+  //uds
+  pinMode(triggerPinRight, OUTPUT); // Sets the trigPin as an Output
+  pinMode(echoPinRight, INPUT); // sets the echoPin to input
+  pinMode(triggerPinLeft, OUTPUT); // Sets the trigPin as an Output
+  pinMode(echoPinRight, INPUT); // sets the echoPin to input
+}
+
+void loop(){
+  //LEFT UDS
+  digitalWrite(triggerPinLeft, LOW); //turn trigger pin off; sets trigger pin state to low
+  delayMicroseconds(2); 
+  digitalWrite(triggerPinLeft, HIGH); //turn trigger pin on; sets trigger pin state to high
+  delayMicroseconds(10); 
+  digitalWrite(triggerPinLeft, LOW); //turning trigger pin off
+  pinMode(echoPinLeft, INPUT); //setting the echoPin to be an input
+  cmLeft = 0.01723 * pulseIn(echoPinLeft, HIGH); // echoPin, HIGH checks if it's hit the microphone/sensor again    
+  // Serial.print(cmLeft); 
+  // Serial.println("cmLeft");
+  delay(100); 
+
+  // RIGHT UDS
+  digitalWrite(triggerPinRight, LOW); //turn trigger pin off; sets trigger pin state to low
+  delayMicroseconds(2); 
+  digitalWrite(triggerPinRight, HIGH); //turn trigger pin on; sets trigger pin state to high
+  delayMicroseconds(10); 
+  digitalWrite(triggerPinRight, LOW); //turning trigger pin off
+  pinMode(echoPinRight, INPUT); //setting the echoPin to be an input
+  cmRight = 0.01723 * pulseIn(echoPinRight, HIGH); // echoPin, HIGH checks if it's hit the microphone/sensor again    
+  delay(100); 
+
+  if(cmRight < 50){
+    Servo_bot.write(180);
+  }
+  if(cmLeft < 50){
+    Servo_bot.write(0);
+  }
+  //delay(500);
+}
